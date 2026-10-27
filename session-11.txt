@@ -1,0 +1,207 @@
+IMP:***************************** Mongodb Instllation **********************
+
+dnf install will try to get the repos from /etc/yum.repos.d/ 
+mongodb is not there in this repo. So to install mongodb first we need to add mongodb in this repo
+
+1) vim /etc/yum.repos.d/mongo.repo
+2) [mongodb-org-7.0]
+name=MongoDB Repository
+baseurl=https://repo.mongodb.org/yum/redhat/9/mongodb-org/7.0/x86_64/
+enabled=1
+gpgcheck=0
+
+3) dnf install mongodb-org -y
+4) systemctl enable mongod
+5) systemctl start mongod
+6) netstat -lntp (127.0.0.1 == localhost)
+NOTE: ***
+By default MongoDB listens only on localhost (127.0.0.1), so only applications on this same server can reach it. Catalogue and User run on other servers, so MongoDB must listen on all addresses.
+
+Update the listen address from 127.0.0.1 to 0.0.0.0 in /etc/mongod.conf:
+***
+7) after making config changes restart the server --> systemctl restart mongod
+8) netstat -lntp (0.0.0.0:27107) ---> now it will accept the connections from other servers like catalogue and cart
+*******************************END MongoDB Instllation ***********************************
+
+IMP : ******************** Redis Instllation *************************
+
+1)dnf module disable redis -y
+2)dnf module enable redis:7 -y
+3)dnf install redis -y
+4)netstat -lntp (127.0.0.1 == localhost)
+NOTE : ******
+By default Redis listens only on localhost (127.0.0.1). User and Cart run on other servers, so Redis must listen on all addresses.
+
+5)edit the config file --> vim /etc/redis/redis.conf
+Update bind 127.0.0.1 -::1 to bind 0.0.0.0 -::1
+Update protected-mode yes to protected-mode no
+*******
+6)systemctl enable redis
+7)systemctl start redis
+
+************End Redis Instllation **********************
+
+IMP : ****************** Rabbit MQ Instllation ********************
+
+NOTE : Rabit MQ is an Asyncrynous communication (Producer,Consumer,Topic,brokers) --> fire the message and forgot
+EX: User --> System1(Producer) ---> Broker --> System2(Consumer)
+
+dnf install will try to get the repos from /etc/yum.repos.d/ 
+RabbitMQ is not there in this repo. So to install RabbitMQ first we need to add RabbitMQ in this repo
+
+1) vim /etc/yum.repos.d/rabbitmq.repo
+2) dnf install erlang rabbitmq-server -y
+3) systemctl enable rabbitmq-server
+4) systemctl start rabbitmq-server
+
+NOTE : *******
+RabbitMQ comes with a default user guest/guest, but guest can only connect from the same server. Create a user for the application:
+
+rabbitmqctl add_user roboshop roboshop123
+rabbitmqctl set_permissions -p / roboshop ".*" ".*" ".*"
+
+******
+
+6) netstat -lntp
+********************** End RabbitMQ Instllation *************************
+SQL
+====
+Structured query language
+DataBase server -> DataBase/Schema creation -> Tables -> Rows and columns
+
+1 row is 1 customer data
+Primary key and foreign keys are used for relation between tables
+
+Customer table. I can't insert payment related info
+
+NoSQL
+=====
+rows and columns are always SQL based..
+
+shop keeps it a box... they keep all the items which are in offer. unstructured
+
+MongoDB -> NoSQL database server
+
+DataBase Server -> DataBase/Schema -> Collections -> Documents(json)
+
+{
+	"_id": "123456"
+	"name": "sivakumar",
+	"mobile": "6281937079",
+	"email": "info@joindevops.com"
+}
+
+{
+	"name": "sivakumar",
+	"mobile": "6281937079",
+	"email": "info@joindevops.com",
+	"address": "nellore",
+	"experience" : "14 years",
+	"skills": "devops"
+}
+
+NoSQL holds more data with better perfomance. SQL is used for transactions
+
+product details -> name, description, ratings, reviews, specs, etc....
+
+SQL tables = NoSQL collections
+SQL rows and columns = NoSQL documents(json)
+SQL primary and foreign key relations are mandatory
+NoSQL relations are not mandatory
+
+student
+========
+{
+	"_id": "123456"
+	"name": "sivakumar",
+	"mobile": "6281937079",
+	"email": "info@joindevops.com"
+}
+
+
+student_skills
+=========
+{
+	"_id": "abcfdgd",
+	"student_id": "123456",
+	"skills": "devops",
+	"experience": "14 years"
+}
+
+product details -> NoSQL
+order details -> SQL
+
+Catalogue -> MongoDB
+
+MongoDB is accepting connections from catalogue on port number 27017
+
+project = roboshop
+components/modules = mongodb, redis, catalogue, etc..
+
+1. roboshop-mongodb
+2. mongodb
+
+joindevops-class-1-section-A-123456
+
+roboshop-mongodb -> 27017
+roboshop-catalogue
+roboshop-user
+
+roboshop-mongodb
+================
+Port number				source
+------------			-------
+27017					roboshop-catalogue -> mongodb accepts connections on port no 27017 from the instances with SG attached as roboshop-catalogue
+27017					roboshop-user -> mongodb accepting connections on port 27017 from the instance where roboshop-user SG attached
+
+
+/etc/yum.repos.d/
+
+127.0.0.1 == localhost
+
+Redis -> Cache
+==============
+App -> DataBase
+
+1. request the connection from connection pool
+2. open the connection
+3. do the transaction(CREATE, READ, UPDATE, DELETE)
+4. close the connection
+
+Cache -> Key value pair database
+
+App -> Cache -> User
+
+App -> Cache -> DB -> Cache -> User
+
+InMemory database -> RAM
+Hard Disk -> ROM
+
+Processor -> HD -> RAM -> User
+
+READ operations are cached, TTL is configured for example 1hr
+
+App -> UPDATE info with in 1hr -> invalidate the cached
+
+Queue DataBase
+===============
+1. Synchronous
+2. Asynchonous
+
+HTTP -> Client -> Server (immidiate response exepected)
+Asynchonous -> Response will come in sometime, don't wait
+
+HTTP -> Send a request, wait for response 30sec -> if it dont get response then error
+MQ -> Fire and forget -> send request, dont wait for response
+
+Ramesh -> Suresh
+
+point to point -> a message intended for only one party
+publish and subscribe -> a message is intended for multiple parties
+
+ActiveMQ, JBossMQ, Kafka, RabbitMQ
+
+
+
+
+

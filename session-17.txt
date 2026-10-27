@@ -1,0 +1,217 @@
+Variables
+Data types
+Conditions
+Functions
+Loops
+Error handling
+
+Algorithm
+Psudo code
+
+Syntax
+
+Shell by default not exit when error comes, it is our responsibility to check previous command exit status
+$?
+0 -> success
+not 0 -> failure
+
+less lines, more clarity, more readable -> good
+more lines, less clarity, less readable -> bad
+
+we can keep repeated code in a function. function is meant by a single task execution. 
+function takes input and give us output..
+
+FUNC_NAME(){
+	$1 = input-1
+	$2 = input-2
+	repeated code
+}
+
+FUNC_NAME "input-1" "input-2" "input-3"
+
+redirections
+============
+> symbol is for redirection
+>> -> append
+
+1 -> success
+2 -> error
+
+ls -l > output.log == ls -l 1> output.log  --> This will store only success output
+
+ls -ldfjdsUHFRDF 2> output.log --> This will store only failure output
+
+ls -l &> output.log  --> this will store both success and failure output
+
+&> --> This will also override the previous output
+&>> --> This will append the previous output
+
+ls -l | tee -a output.log --> This will also show in screen along with storing it in log file
+
+/var/log/shell-practice/13-logs.sh.log
+
+====
+for(int i=0; i<=100; i++){
+	echo $i
+}
+
+set int i=0
+evaluate expression i<=100
+0
+
+i=1
+i<=100
+print 1
+
+i=99
+i<=100
+print 99
+
+i=100
+i<=100
+print 100
+=============
+
+echo -e "\e[31m Hello world"  --> enable red colour to the text
+colour codes:
+31 --> red
+32 --> green
+33 --> yellow
+0 --> normal colour --> echo -e "\e[31m Hello \e[0m world" 
+
+=====================
+
+1. known errors -> handle
+2. unknown errors -> we can't handle
+
+Programatical
+====
+Software development kit
+
+AWS Console (UI) -->  Authenticationa and Authorisation ---> API ---> AWS Account
+AWS CLI (CMD line) -->  Authenticationa and Authorisation ---> API ---> AWS Account
+SDK (Java...) -->  Authenticationa and Authorisation --> API --> AWS Account
+Ansible (Modules) -->  Authenticationa and Authorisation --> API --> AWS Account
+Terraform (Providers) -->  Authenticationa and Authorisation --> API --> AWS Account
+
+
+login
+launch instance
+	name
+	ami
+	instance_type
+	security_group
+	hard disk
+	key
+
+
+AWS Command to launch instance:
+	
+aws ec2 run-instances \
+    --image-id ami-0055977a6e828a4f4 \
+    --instance-type t3.micro \
+    --security-group-ids sg-0dedbbac00b637da2 \
+    --tag-specifications 'ResourceType=instance,Tags=[{Key=Name,Value=roboshop-mongodb}]'
+
+=========================================
+IAM (Identity and Access Management)
+Accesskey and Secret key
+
+IAM --> IAM Users --> Create User
+			UserName : Automation
+			COnsole access not needed as its creating for program access
+			Next
+			Attach Policies directly --> Administrative access --> Next --> Create User
+
+Open IAM Users --> Automation --> security credentials --> Access Keys --> Create access key --> Command line Interface --> next --> create access key and secret key
+============================================
+
+Install AWS CLI in your system to connect to AWS account
+https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html
+
+AWS configure (To Authenticate to AWS account) --> Only once in our system. So it will gets stored in our system
+accesskey
+secret key
+region us-east-1
+======================================
+
+coding
+=======
+1. programming -> developers
+2. scripting -> devops/plsql
+
+command-1 | command-2
+
+create sg
+give it to launch instance
+
+===============================
+$ aws ec2 run-instances \
+    --image-id ami-0055977a6e828a4f4 \
+    --instance-type t3.micro \
+    --security-group-ids sg-0dedbbac00b637da2 \
+    --tag-specifications 'ResourceType=instance,Tags=[{Key=Name,Value=roboshop-mongodb}]'
+{
+    "ReservationId": "r-0bff82b4eaa30c80b",
+    "OwnerId": "511743255565",
+    "Groups": [],
+    "Instances": [
+        {
+            "Architecture": "x86_64",
+            "BlockDeviceMappings": [],
+            "ClientToken": "ddd72840-0b5b-45b5-8486-46db35ef83c1",
+            "EbsOptimized": false,
+            "EnaSupport": true,
+            "Hypervisor": "xen",
+            "NetworkInterfaces": [
+                {
+                    "Attachment": {
+                        "AttachTime": "2026-10-21T09:40:14+00:00",
+                        "AttachmentId": "eni-attach-0aa05ac2e6c482803",
+                        "DeleteOnTermination": true,
+                        "DeviceIndex": 0,
+                        "Status": "attaching",
+                        "NetworkCardIndex": 0
+                    },
+                    "Description": "",
+                    "Groups": [
+                        {
+                            "GroupId": "sg-0dedbbac00b637da2",
+                            "GroupName": "common-SSH"
+                        }
+                    ],
+                    "Ipv6Addresses": [],
+                    "MacAddress": "0a:ff:f4:d8:39:63",
+                    "NetworkInterfaceId": "eni-02f5abc22ce43913a",
+                    "OwnerId": "511743255565",
+                    "PrivateDnsName": "ip-172-31-27-210.ec2.internal",
+                    "PrivateIpAddress": "172.31.27.210",
+                    "PrivateIpAddresses": [
+                        {
+                            "Primary": true,
+                            "PrivateDnsName": "ip-172-31-27-210.ec2.internal",
+                            "PrivateIpAddress": "172.31.27.210"
+                        }
+                    ],
+                    "SourceDestCheck": true,
+                    "Status": "in-use",
+                    "SubnetId": "subnet-0d95dbd74d1347f51",
+                    "VpcId": "vpc-0f9b8e45ecdb45d1d",
+                    "InterfaceType": "interface",
+                    "Operator": {
+                        "Managed": false
+                    }
+                }
+            ],
+            "RootDeviceName": "/dev/sda1",
+            "RootDeviceType": "ebs",
+            "SecurityGroups": [
+                {
+                    "GroupId": "sg-0dedbbac00b637da2",
+-- More  --
+
+
+
+
+
+
